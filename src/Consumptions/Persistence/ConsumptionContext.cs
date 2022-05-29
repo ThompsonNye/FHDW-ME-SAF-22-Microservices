@@ -14,4 +14,15 @@ public class ConsumptionContext : DbContext, IApplicationDbContext
         var name = Assembly.GetExecutingAssembly().FullName ?? "InMemDefaultDb";
         optionsBuilder.UseInMemoryDatabase(name);
     }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Consumption>()
+            .Property(p => p.Id)
+            .HasConversion(x => x.Value, x => new(x));
+        
+        modelBuilder.Entity<Consumption>()
+            .Property(p => p.CarId)
+            .HasConversion(x => x.Value, x => new(x));
+    }
 }
