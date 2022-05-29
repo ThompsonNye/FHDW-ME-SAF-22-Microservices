@@ -5,10 +5,26 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <RootNamespace>Nuyken.Vegasco.Backend.Microservices.Consumptions</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.5" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.5" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.4" />
+        <PackageReference Include="StronglyTypedId" Version="0.2.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Models\Entities\CarId.cs">
+        <Generator>MSBuild:GenerateCodeFromAttributes</Generator>
+      </Compile>
+      <Compile Update="Models\Entities\Consumption.cs">
+        <Generator>MSBuild:GenerateCodeFromAttributes</Generator>
+      </Compile>
+      <Compile Update="Models\Entities\ConsumptionId.cs">
+        <Generator>MSBuild:GenerateCodeFromAttributes</Generator>
+      </Compile>
     </ItemGroup>
 
 </Project>
