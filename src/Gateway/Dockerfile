@@ -11,7 +11,13 @@ WORKDIR "/src/Nuyken.Vegasco.Backend.Microservices.Gateway"
 RUN dotnet build "Nuyken.Vegasco.Backend.Microservices.Gateway.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Nuyken.Vegasco.Backend.Microservices.Gateway.csproj" -c Release -o /app/publish
+RUN dotnet publish "Nuyken.Vegasco.Backend.Microservices.Gateway.csproj" \
+    -c Release \
+    -o /app/publish \
+    --runtime linux-musl-x64 \
+    --no-self-contained \
+    -p:PublishReadyToRun=true \
+    -p:PublishReadyToRunShowWarnings=true
 
 FROM base AS final
 WORKDIR /app
