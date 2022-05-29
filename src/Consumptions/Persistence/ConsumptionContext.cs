@@ -25,4 +25,14 @@ public class ConsumptionContext : DbContext, IApplicationDbContext
             .Property(p => p.CarId)
             .HasConversion(x => x.Value, x => new(x));
     }
+
+    async Task<int> IApplicationDbContext.SaveChangesAsync(CancellationToken cancellationToken)
+    {
+        foreach (var changedConsumption in ChangeTracker.Entries<Consumption>())
+        {
+            changedConsumption.Entity.DateTime = changedConsumption.Entity.DateTime.ToUniversalTime();
+        }
+
+        return await base.SaveChangesAsync(cancellationToken);
+    }
 }
