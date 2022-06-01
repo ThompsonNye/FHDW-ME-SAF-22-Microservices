@@ -1,4 +1,5 @@
 using System.Net;
+using System.Reflection;
 using System.Text;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Abstractions;
 using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Dtos;
 using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Entities;
+using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Requests;
 
 namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Controllers
 {
@@ -49,11 +51,17 @@ namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Controllers
             : NotFound();
         }
         
+        /// <summary>
+        /// Creates a new consumption entry.
+        /// </summary>
+        /// <param name="createConsumptionCommand"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(ConsumptionDto), (int)HttpStatusCode.Created)]
-        public async Task<IActionResult> CreateNewAsync([FromBody] ConsumptionDto consumptionDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateNewAsync([FromBody] CreateConsumptionCommand createConsumptionCommand, CancellationToken cancellationToken)
         {
-            var consumption = _mapper.Map<Consumption>(consumptionDto);
+            var consumption = _mapper.Map<Consumption>(createConsumptionCommand);
             _dbContext.Consumptions.Add(consumption);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
@@ -62,7 +70,7 @@ namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Controllers
         
         [HttpPut("{id:guid}")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] ConsumptionDto consumptionDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UpdateConsumptionCommand updateConsumptionCommand, CancellationToken cancellationToken)
         {
             var consumptionId = new ConsumptionId(id);
             var consumption = await _dbContext.Consumptions.FirstOrDefaultAsync(x => x.Id == consumptionId, cancellationToken);
@@ -71,7 +79,11 @@ namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Controllers
                 return NotFound();
             }
 
-            _mapper.Map(consumptionDto, consumption);
+            consumption.Amount = updateConsumptionCommand.Amount ?? consumption.Amount;
+            consumption.Distance = updateConsumptionCommand.Distance ?? consumption.Distance;
+            consumption.CarId = updateConsumptionCommand.CarId.HasValue ? new(updateConsumptionCommand.CarId.Value) : consumption.CarId;
+            consumption.DateTime = updateConsumptionCommand.DateTime ?? consumption.DateTime;
+            consumption.IgnoreInCalculation = updateConsumptionCommand.IgnoreInCalculation ?? consumption.IgnoreInCalculation;
 
             await _dbContext.SaveChangesAsync(cancellationToken);
             return NoContent();

@@ -1,15 +1,30 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Nuyken.Vegasco.Backend.Microservices.Consumptions.Extensions;
 using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Abstractions;
+using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Configuration;
+using Nuyken.Vegasco.Backend.Microservices.Consumptions.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext(builder.Configuration);
 
-builder.Services.AddControllers();
+builder.Services.Configure<ValidationOptions>(builder.Configuration.GetSection(nameof(ValidationOptions)));
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+builder.Services.AddControllers()
+    .AddFluentValidation(config => config.LocalizationEnabled = false);
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
 var app = builder.Build();
 

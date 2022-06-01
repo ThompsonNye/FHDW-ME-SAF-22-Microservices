@@ -2,7 +2,7 @@
 
 public class Consumption
 {
-    public ConsumptionId Id { get; set; }
+    public ConsumptionId Id { get; set; } = ConsumptionId.New();
 
     public DateTimeOffset DateTime { get; set; }
 
