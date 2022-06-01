@@ -68,6 +68,13 @@ namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Controllers
             return CreatedAtAction(nameof(GetSingle), new { id = consumption.Id }, consumption);
         }
         
+        /// <summary>
+        /// Updates an existing consumption entry.
+        /// </summary>
+        /// <param name="id">The entry's id.</param>
+        /// <param name="updateConsumptionCommand">The updated values (if provided, the id has to match the route id).</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpPut("{id:guid}")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UpdateConsumptionCommand updateConsumptionCommand, CancellationToken cancellationToken)
