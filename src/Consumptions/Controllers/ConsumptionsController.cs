@@ -41,7 +41,13 @@ namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Controllers
             return Ok(result);
         }
         
+        /// <summary>
+        /// Returns a single <see cref="ConsumptionDto"/> entry.
+        /// </summary>
+        /// <param name="id">The entry's id.</param>
+        /// <returns></returns>
         [HttpGet("{id:guid}")]
+        [ProducesResponseType(typeof(ConsumptionDto), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetSingle(Guid id)
         {
             var consumptionId = new ConsumptionId(id);
@@ -96,6 +102,12 @@ namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Controllers
             return NoContent();
         }
         
+        /// <summary>
+        /// Deletes an existing consumption entry.
+        /// </summary>
+        /// <param name="id">The entry's id.</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpDelete("{id:guid}")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken)
