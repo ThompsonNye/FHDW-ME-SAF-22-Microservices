@@ -2,6 +2,9 @@
 
 namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Persistence;
 
+/// <summary>
+/// The DbContext when using PostgreSQL.
+/// </summary>
 public class PostgreSqlContext : ConsumptionContext
 {
     private readonly IConfiguration _configuration;
@@ -11,6 +14,10 @@ public class PostgreSqlContext : ConsumptionContext
         _configuration = configuration;
     }
 
+    /// <summary>
+    /// Configuring the db provider for PostgreSQL.
+    /// </summary>
+    /// <param name="optionsBuilder"></param>
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         var connString = _configuration.GetConnectionString("Default");

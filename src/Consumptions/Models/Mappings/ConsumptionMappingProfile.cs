@@ -5,6 +5,9 @@ using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Requests;
 
 namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Mappings;
 
+/// <summary>
+/// Centralized mapping profile for the application for consumption related entities.
+/// </summary>
 public class ConsumptionMappingProfile : Profile
 {
     public ConsumptionMappingProfile()

@@ -2,6 +2,9 @@
 
 namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Requests;
 
+/// <summary>
+/// Request for creating a <see cref="Consumption"/> entity with the given values.
+/// </summary>
 public class CreateConsumptionCommand
 {
     public DateTimeOffset DateTime { get; init; }

@@ -1,6 +1,4 @@
 using System.Net;
-using System.Reflection;
-using System.Text;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +16,7 @@ namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Controllers
     {
         private readonly IApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
-        
+
         public ConsumptionsController(IApplicationDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
@@ -31,32 +29,32 @@ namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<ConsumptionDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<ConsumptionDto>), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
         {
             var result = await _dbContext.Consumptions
                 .ProjectTo<ConsumptionDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
-            
+
             return Ok(result);
         }
-        
+
         /// <summary>
         /// Returns a single <see cref="ConsumptionDto"/> entry.
         /// </summary>
         /// <param name="id">The entry's id.</param>
         /// <returns></returns>
         [HttpGet("{id:guid}")]
-        [ProducesResponseType(typeof(ConsumptionDto), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ConsumptionDto), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> GetSingle(Guid id)
         {
             var consumptionId = new ConsumptionId(id);
             var result = await _dbContext.Consumptions.FirstOrDefaultAsync(x => x.Id == consumptionId);
-            return result is not null 
-            ? Ok(result)
-            : NotFound();
+            return result is not null
+                ? Ok(result)
+                : NotFound();
         }
-        
+
         /// <summary>
         /// Creates a new consumption entry.
         /// </summary>
@@ -64,16 +62,17 @@ namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost]
-        [ProducesResponseType(typeof(ConsumptionDto), (int)HttpStatusCode.Created)]
-        public async Task<IActionResult> CreateNewAsync([FromBody] CreateConsumptionCommand createConsumptionCommand, CancellationToken cancellationToken)
+        [ProducesResponseType(typeof(ConsumptionDto), (int) HttpStatusCode.Created)]
+        public async Task<IActionResult> CreateNewAsync([FromBody] CreateConsumptionCommand createConsumptionCommand,
+            CancellationToken cancellationToken)
         {
             var consumption = _mapper.Map<Consumption>(createConsumptionCommand);
             _dbContext.Consumptions.Add(consumption);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return CreatedAtAction(nameof(GetSingle), new { id = consumption.Id }, consumption);
+            return CreatedAtAction(nameof(GetSingle), new {id = consumption.Id}, consumption);
         }
-        
+
         /// <summary>
         /// Updates an existing consumption entry.
         /// </summary>
@@ -82,11 +81,13 @@ namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPut("{id:guid}")]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UpdateConsumptionCommand updateConsumptionCommand, CancellationToken cancellationToken)
+        [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        public async Task<IActionResult> UpdateAsync(Guid id,
+            [FromBody] UpdateConsumptionCommand updateConsumptionCommand, CancellationToken cancellationToken)
         {
             var consumptionId = new ConsumptionId(id);
-            var consumption = await _dbContext.Consumptions.FirstOrDefaultAsync(x => x.Id == consumptionId, cancellationToken);
+            var consumption =
+                await _dbContext.Consumptions.FirstOrDefaultAsync(x => x.Id == consumptionId, cancellationToken);
             if (consumption is null)
             {
                 return NotFound();
@@ -94,14 +95,17 @@ namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Controllers
 
             consumption.Amount = updateConsumptionCommand.Amount ?? consumption.Amount;
             consumption.Distance = updateConsumptionCommand.Distance ?? consumption.Distance;
-            consumption.CarId = updateConsumptionCommand.CarId.HasValue ? new(updateConsumptionCommand.CarId.Value) : consumption.CarId;
+            consumption.CarId = updateConsumptionCommand.CarId.HasValue
+                ? new(updateConsumptionCommand.CarId.Value)
+                : consumption.CarId;
             consumption.DateTime = updateConsumptionCommand.DateTime ?? consumption.DateTime;
-            consumption.IgnoreInCalculation = updateConsumptionCommand.IgnoreInCalculation ?? consumption.IgnoreInCalculation;
+            consumption.IgnoreInCalculation =
+                updateConsumptionCommand.IgnoreInCalculation ?? consumption.IgnoreInCalculation;
 
             await _dbContext.SaveChangesAsync(cancellationToken);
             return NoContent();
         }
-        
+
         /// <summary>
         /// Deletes an existing consumption entry.
         /// </summary>
@@ -109,11 +113,12 @@ namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpDelete("{id:guid}")]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int) HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
             var consumptionId = new ConsumptionId(id);
-            var consumption = await _dbContext.Consumptions.FirstOrDefaultAsync(x => x.Id == consumptionId, cancellationToken);
+            var consumption =
+                await _dbContext.Consumptions.FirstOrDefaultAsync(x => x.Id == consumptionId, cancellationToken);
             if (consumption is null)
             {
                 return NotFound();

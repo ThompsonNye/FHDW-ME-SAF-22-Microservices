@@ -1,5 +1,10 @@
-﻿namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Requests;
+﻿using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Entities;
 
+namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Requests;
+
+/// <summary>
+/// Request for updating a <see cref="Consumption"/> with the values supplied.
+/// </summary>
 public class UpdateConsumptionCommand
 {
     public Guid? Id { get; set; }

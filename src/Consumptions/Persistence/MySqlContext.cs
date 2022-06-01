@@ -2,6 +2,9 @@
 
 namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Persistence;
 
+/// <summary>
+/// The DbContext when using MySql / MariaDb.
+/// </summary>
 public class MySqlContext : ConsumptionContext
 {
     private readonly IConfiguration _configuration;
@@ -10,7 +13,11 @@ public class MySqlContext : ConsumptionContext
     {
         _configuration = configuration;
     }
-
+    
+    /// <summary>
+    /// Configuring the db provider for MySql / MariaDb.
+    /// </summary>
+    /// <param name="optionsBuilder"></param>
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         var connString = _configuration.GetConnectionString("Default");

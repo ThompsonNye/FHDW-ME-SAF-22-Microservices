@@ -7,6 +7,9 @@ using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Requests;
 
 namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Validation;
 
+/// <summary>
+/// Validation for a <see cref="UpdateConsumptionCommand"/>.
+/// </summary>
 public class UpdateConsumptionCommandValidator : AbstractValidator<UpdateConsumptionCommand>
 {
     public UpdateConsumptionCommandValidator(IDateTimeProvider dateTimeProvider,
