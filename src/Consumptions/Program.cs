@@ -13,6 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext(builder.Configuration);
 
+builder.Services.AddOpenApiDocument();
+
 builder.Services.Configure<ValidationOptions>(builder.Configuration.GetSection(nameof(ValidationOptions)));
 
 builder.Services.AddHttpContextAccessor();
@@ -29,6 +31,9 @@ builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseOpenApi();
+app.UseSwaggerUi3();
+app.UseReDoc(options => options.Path = "/redoc");
 
 app.MapControllers();
 
