@@ -37,16 +37,19 @@ services:
       eureka__instance__port: 80
       eureka__instance__InstanceId": "$${spring:application:name}"
       eureka__instance__preferIpAddress: "true"
+      Kafka__UpdateConsumptionsTopic: "consumptions-update"
+      Kafka__ProducerSettings__BootstrapServers: "broker:29092"
     ports:
       - "80"
     depends_on:
       - serviceDiscovery
       - consumptionsDb
+      - broker
     deploy:
       replicas: 4
       labels:
         app: consumptions
-    
+  
   consumptionsDb:
     image: postgres
     restart: always
@@ -56,10 +59,32 @@ services:
       - "5432"
     ports:
       - "5432:5432"
-    
   
-#  cars:
-#    build:
-#        context: src/Cars
-#        dockerfile: Dockerfile
-#    container_name: cars
+  #  cars:
+  #    build:
+  #        context: src/Cars
+  #        dockerfile: Dockerfile
+  #    container_name: cars
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  broker:
+    image: confluentinc/cp-kafka
+    container_name: broker
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1

@@ -36,6 +36,8 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
+builder.Services.AddKafka();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

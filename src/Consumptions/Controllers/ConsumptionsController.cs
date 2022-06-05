@@ -1,8 +1,11 @@
 using System.Net;
+using System.Text.Json;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Confluent.Kafka;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Nuyken.Vegasco.Backend.Microservices.Consumptions.Kafka;
 using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Abstractions;
 using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Dtos;
 using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Entities;
@@ -15,12 +18,15 @@ namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Controllers
     public class ConsumptionsController : ControllerBase
     {
         private readonly IApplicationDbContext _dbContext;
+        private readonly ILogger<ConsumptionsController> _logger;
         private readonly IMapper _mapper;
 
-        public ConsumptionsController(IApplicationDbContext dbContext, IMapper mapper)
+        public ConsumptionsController(IApplicationDbContext dbContext, IMapper mapper,
+            ILogger<ConsumptionsController> logger)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _logger = logger;
         }
 
         /// <summary>
@@ -78,12 +84,17 @@ namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Controllers
         /// </summary>
         /// <param name="id">The entry's id.</param>
         /// <param name="updateConsumptionCommand">The updated values (if provided, the id has to match the route id).</param>
+        /// <param name="producer"></param>
+        /// <param name="config"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPut("{id:guid}")]
         [ProducesResponseType((int) HttpStatusCode.NoContent)]
         public async Task<IActionResult> UpdateAsync(Guid id,
-            [FromBody] UpdateConsumptionCommand updateConsumptionCommand, CancellationToken cancellationToken)
+            [FromBody] UpdateConsumptionCommand updateConsumptionCommand,
+            [FromServices] KafkaDependentProducer<Null, string> producer,
+            [FromServices] IConfiguration config,
+            CancellationToken cancellationToken)
         {
             var consumptionId = new ConsumptionId(id);
             var consumption =
@@ -103,6 +114,13 @@ namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Controllers
                 updateConsumptionCommand.IgnoreInCalculation ?? consumption.IgnoreInCalculation;
 
             await _dbContext.SaveChangesAsync(cancellationToken);
+
+            var topic = config.GetValue<string>("Kafka:UpdateConsumptionsTopic");
+            producer.Produce(topic, new()
+            {
+                Value = JsonSerializer.Serialize(consumption)
+            }, report => DeliveryReportHandler.Handle(report, _logger));
+
             return NoContent();
         }
 
