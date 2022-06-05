@@ -23,6 +23,8 @@
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.5" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.4" />
         <PackageReference Include="NSwag.AspNetCore" Version="13.16.1" />
+        <PackageReference Include="Steeltoe.Discovery.ClientCore" Version="3.2.0" />
+        <PackageReference Include="Steeltoe.Discovery.Eureka" Version="3.2.0" />
         <PackageReference Include="StronglyTypedId" Version="0.2.1" />
     </ItemGroup>
 

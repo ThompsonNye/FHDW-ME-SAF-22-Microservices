@@ -7,6 +7,8 @@ using Nuyken.Vegasco.Backend.Microservices.Consumptions.Extensions;
 using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Abstractions;
 using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Configuration;
 using Nuyken.Vegasco.Backend.Microservices.Consumptions.Services;
+using Steeltoe.Discovery.Client;
+using Steeltoe.Discovery.Eureka;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext(builder.Configuration);
 
 builder.Services.AddOpenApiDocument();
+
+builder.Services.AddDiscoveryClient(builder.Configuration);
+builder.Services.AddServiceDiscovery(options =>
+{
+    options.UseEureka();
+});
 
 builder.Services.Configure<ValidationOptions>(builder.Configuration.GetSection(nameof(ValidationOptions)));
 

@@ -1,0 +1,46 @@
+version: '3.4'
+
+services:
+  serviceDiscovery:
+    image: steeltoeoss/eureka-server
+    container_name: serviceDiscovery
+    restart: always
+    ports:
+      - "8761:8761"
+
+  consumptions:
+    build:
+      context: src/Consumptions
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      ConnectionStrings__Default: "Host=consumptionsDb;Port=5432;Database=postgres;Username=postgres;Password=password"
+      Database__Type: "postgres"
+      spring__application__name: "Consumptions"
+      eureka__client__serviceUrl: "http://serviceDiscovery:8761/eureka/"
+      eureka__client__shouldFetchRegistry: "false"
+      eureka__client__shouldRegisterWithEureka: "true"
+      eureka__client__validateCertificates: "false"
+      eureka__instance__port: 80
+      eureka__instance__InstanceId": "$${spring:application:name}"
+      eureka__instance__preferIpAddress: "true"
+    ports:
+      - "80"
+    depends_on:
+      - serviceDiscovery
+      - consumptionsDb
+    deploy:
+      replicas: 4
+      labels:
+        app: consumptions
+    
+  consumptionsDb:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: "password"
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+    
