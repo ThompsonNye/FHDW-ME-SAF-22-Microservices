@@ -1,12 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuyken.Vegasco.Backend.Microservices.Gateway", "src\Gateway\Nuyken.Vegasco.Backend.Microservices.Gateway.csproj", "{51D75D26-BC7B-4B04-ACE8-096942A83AB9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway", "src\Gateway\Gateway.csproj", "{51D75D26-BC7B-4B04-ACE8-096942A83AB9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7F54C6EF-2615-4EC7-9849-74327D2F7B1A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cars", "src\Cars\Cars.csproj", "{4B7636B7-C99C-4C5B-A20C-F4B1E7ED5C9F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Consumptions", "src\Consumptions\Consumptions.csproj", "{C35817A6-6430-4F13-B744-59606E47D1DB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D0CD1D01-34D1-4CBE-A973-5B46F478D32E}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yaml = docker-compose.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

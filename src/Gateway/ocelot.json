@@ -1,0 +1,38 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/v1/consumptions",
+      "DownstreamScheme": "http",
+      "ServiceName": "Consumptions",
+      "UpstreamPathTemplate": "/consumptions",
+      "UseServiceDiscovery": true,
+      "UpstreamHttpMethod": [ "Get", "Post" ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/consumptions/{id}",
+      "DownstreamScheme": "http",
+      "ServiceName": "Consumptions",
+      "UseServiceDiscovery": true,
+      "UpstreamPathTemplate": "/consumptions/{id}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+    }
+  ],
+  "Eureka": {
+    "Client": {
+      "ServiceUrl": "http://serviceDiscovery:8761/eureka/",
+      "ShouldRegisterWithEureka": false,
+      "ShouldFetchRegistry": true
+    }
+  },
+  "GlobalConfiguration": {
+    "ServiceDiscoveryProvider": {
+      "Type": "Eureka"
+    }
+  }
+}

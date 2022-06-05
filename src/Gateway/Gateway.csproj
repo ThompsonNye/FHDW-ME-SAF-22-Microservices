@@ -5,9 +5,12 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <RootNamespace>Nuyken.Vegasco.Backend.Microservices.Gateway</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Ocelot" Version="18.0.0" />
+        <PackageReference Include="Ocelot.Provider.Eureka" Version="18.0.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     </ItemGroup>
 

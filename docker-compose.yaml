@@ -7,6 +7,19 @@ services:
     restart: always
     ports:
       - "8761:8761"
+  
+  gateway:
+    build:
+      context: src/Gateway
+      dockerfile: Dockerfile
+    container_name: gateway
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - serviceDiscovery
+    volumes:
+      - ./src/Gateway/ocelot.json:/app/ocelot.json
 
   consumptions:
     build:
@@ -44,3 +57,9 @@ services:
     ports:
       - "5432:5432"
     
+  
+#  cars:
+#    build:
+#        context: src/Cars
+#        dockerfile: Dockerfile
+#    container_name: cars
