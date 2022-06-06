@@ -5,6 +5,9 @@ namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Services;
 
 public class CarDeletedEventConsumer : BackgroundService
 {
+    private const string TopicKey = "Kafka:DeleteCarsTopic";
+    private const string ConsumerSettingsKey = "Kafka:ConsumerSettings";
+    
     private readonly string _topic;
     private readonly IApplicationDbContext _dbContext;
     private readonly ILogger<CarDeletedEventConsumer> _logger;
@@ -12,10 +15,10 @@ public class CarDeletedEventConsumer : BackgroundService
 
     public CarDeletedEventConsumer(IConfiguration configuration, IApplicationDbContext dbContext, ILogger<CarDeletedEventConsumer> logger)
     {
-        _topic = configuration.GetValue<string>("Kafka:DeleteCarsTopic");
+        _topic = configuration.GetValue<string>(TopicKey);
 
         var consumerConfig = new ConsumerConfig();
-        configuration.GetSection("Kafka:ConsumerSettings").Bind(consumerConfig);
+        configuration.GetSection(ConsumerSettingsKey).Bind(consumerConfig);
         _consumer = new ConsumerBuilder<Null, string>(consumerConfig).Build();
         
         _dbContext = dbContext;
