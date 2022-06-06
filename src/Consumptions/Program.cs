@@ -38,6 +38,7 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
 builder.Services.AddKafka();
+builder.Services.AddHostedService<CarDeletedEventConsumer>();
 
 var app = builder.Build();
 
