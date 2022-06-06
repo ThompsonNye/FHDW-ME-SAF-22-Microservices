@@ -21,6 +21,28 @@
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
       }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/cars",
+      "DownstreamScheme": "http",
+      "ServiceName": "Cars",
+      "UpstreamPathTemplate": "/cars",
+      "UseServiceDiscovery": true,
+      "UpstreamHttpMethod": [ "Get", "Post" ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/cars/{id}",
+      "DownstreamScheme": "http",
+      "ServiceName": "Cars",
+      "UseServiceDiscovery": true,
+      "UpstreamPathTemplate": "/cars/{id}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
     }
   ],
   "Eureka": {
