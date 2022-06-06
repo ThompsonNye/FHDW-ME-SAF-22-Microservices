@@ -23,8 +23,8 @@ services:
 
   consumptions:
     build:
-      context: src/Consumptions
-      dockerfile: Dockerfile
+      context: src/
+      dockerfile: Consumptions/Dockerfile
     restart: always
     environment:
       ConnectionStrings__Default: "Host=consumptionsDb;Port=5432;Database=postgres;Username=postgres;Password=password"
@@ -46,9 +46,40 @@ services:
       - consumptionsDb
       - broker
     deploy:
-      replicas: 4
+      replicas: 1
       labels:
         app: consumptions
+        
+  cars:
+    build:
+      context: src/
+      dockerfile: Cars/Dockerfile
+    restart: always
+    environment:
+      ConnectionStrings__Default: "Host=carsDb;Port=5432;Database=postgres;Username=postgres;Password=password"
+      Database__Type: "postgres"
+      spring__application__name: "Cars"
+      eureka__client__serviceUrl: "http://serviceDiscovery:8761/eureka/"
+      eureka__client__shouldFetchRegistry: "false"
+      eureka__client__shouldRegisterWithEureka: "true"
+      eureka__client__validateCertificates: "false"
+      eureka__instance__port: 80
+      eureka__instance__InstanceId": "$${spring:application:name}"
+      eureka__instance__preferIpAddress: "true"
+      Kafka__UpdateConsumptionsTopic: "consumptions-update"
+      Kafka__UpdateCarsTopic: "cars-update"
+      Kafka__DeleteCarsTopic: "cars-delete"
+      Kafka__ProducerSettings__BootstrapServers: "broker:29092"
+    ports:
+      - "80"
+    depends_on:
+      - serviceDiscovery
+      - carsDb
+      - broker
+    deploy:
+      replicas: 1
+      labels:
+        app: cars
   
   consumptionsDb:
     image: postgres
@@ -59,6 +90,16 @@ services:
       - "5432"
     ports:
       - "5432:5432"
+  
+  carsDb:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: "password"
+    expose:
+      - "5432"
+    ports:
+      - "55432:5432"
   
   #  cars:
   #    build:

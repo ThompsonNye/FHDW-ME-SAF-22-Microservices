@@ -1,14 +1,16 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+﻿FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine AS base
 WORKDIR /app
 EXPOSE 80
-EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build
 WORKDIR /src
-COPY ["src/Cars/Cars.csproj", "Cars/"]
-RUN dotnet restore "src/Cars/Cars.csproj"
-COPY . .
-WORKDIR "/src/Cars"
+COPY Shared/Shared.csproj Shared/
+RUN dotnet restore Shared/Shared.csproj
+COPY Cars/Cars.csproj Cars/
+RUN dotnet restore Cars/Cars.csproj
+COPY Shared/ Shared/
+COPY Cars/ Cars/
+WORKDIR /src/Cars
 RUN dotnet build "Cars.csproj" -c Release -o /app/build
 
 FROM build AS publish
