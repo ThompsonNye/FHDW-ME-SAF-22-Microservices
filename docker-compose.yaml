@@ -38,6 +38,9 @@ services:
       eureka__instance__InstanceId": "$${spring:application:name}"
       eureka__instance__preferIpAddress: "true"
       Kafka__UpdateConsumptionsTopic: "consumptions-update"
+      Kafka__DeleteConsumptionsTopic: "consumptions-delete"
+      Kafka__UpdateCarsTopic: "cars-update"
+      Kafka__DeleteCarsTopic: "cars-delete"
       Kafka__ProducerSettings__BootstrapServers: "broker:29092"
     ports:
       - "80"
@@ -67,6 +70,7 @@ services:
       eureka__instance__InstanceId": "$${spring:application:name}"
       eureka__instance__preferIpAddress: "true"
       Kafka__UpdateConsumptionsTopic: "consumptions-update"
+      Kafka__DeleteConsumptionsTopic: "consumptions-delete"
       Kafka__UpdateCarsTopic: "cars-update"
       Kafka__DeleteCarsTopic: "cars-delete"
       Kafka__ProducerSettings__BootstrapServers: "broker:29092"
