@@ -51,8 +51,8 @@ namespace Nuyken.Vegasco.Backend.Microservices.Cars.Controllers
         [ProducesResponseType(typeof(CarDto), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> GetSingle(Guid id)
         {
-            var consumptionId = new CarId(id);
-            var result = await _dbContext.Cars.FirstOrDefaultAsync(x => x.Id == consumptionId);
+            var carId = new CarId(id);
+            var result = await _dbContext.Cars.FirstOrDefaultAsync(x => x.Id == carId);
             return result is not null
                 ? Ok(result)
                 : NotFound();
@@ -69,11 +69,11 @@ namespace Nuyken.Vegasco.Backend.Microservices.Cars.Controllers
         public async Task<IActionResult> CreateNewAsync([FromBody] CreateCarCommand createCarCommand,
             CancellationToken cancellationToken)
         {
-            var consumption = _mapper.Map<Car>(createCarCommand);
-            _dbContext.Cars.Add(consumption);
+            var car = _mapper.Map<Car>(createCarCommand);
+            _dbContext.Cars.Add(car);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return CreatedAtAction(nameof(GetSingle), new {id = consumption.Id}, consumption);
+            return CreatedAtAction(nameof(GetSingle), new {id = car.Id}, car);
         }
 
         /// <summary>
@@ -92,9 +92,9 @@ namespace Nuyken.Vegasco.Backend.Microservices.Cars.Controllers
             [FromServices] IConfiguration config,
             CancellationToken cancellationToken)
         {
-            var consumptionId = new CarId(id);
+            var carId = new CarId(id);
             var car =
-                await _dbContext.Cars.FirstOrDefaultAsync(x => x.Id == consumptionId, cancellationToken);
+                await _dbContext.Cars.FirstOrDefaultAsync(x => x.Id == carId, cancellationToken);
             if (car is null)
             {
                 return NotFound();
@@ -117,15 +117,15 @@ namespace Nuyken.Vegasco.Backend.Microservices.Cars.Controllers
         [ProducesResponseType((int) HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
-            var consumptionId = new CarId(id);
-            var consumption =
-                await _dbContext.Cars.FirstOrDefaultAsync(x => x.Id == consumptionId, cancellationToken);
-            if (consumption is null)
+            var carId = new CarId(id);
+            var car =
+                await _dbContext.Cars.FirstOrDefaultAsync(x => x.Id == carId, cancellationToken);
+            if (car is null)
             {
                 return NotFound();
             }
 
-            _dbContext.Cars.Remove(consumption);
+            _dbContext.Cars.Remove(car);
             await _dbContext.SaveChangesAsync(cancellationToken);
             return NoContent();
         }
