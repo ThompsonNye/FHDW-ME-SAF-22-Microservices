@@ -7,7 +7,7 @@ public static class DeliveryReportHandler
 {
     public static void Handle<TKey, TValue>(DeliveryReport<TKey, TValue> deliveryReport, ILogger? logger)
     {
-        if (deliveryReport.Status == PersistenceStatus.NotPersisted)
+        if (deliveryReport.Status != PersistenceStatus.NotPersisted)
         {
             return;
         }
