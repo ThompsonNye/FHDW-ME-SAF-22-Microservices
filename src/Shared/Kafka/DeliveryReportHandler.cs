@@ -14,10 +14,10 @@ public static class DeliveryReportHandler
 
         if (logger is not null)
         {
-            logger.LogWarning("Message delivery failed with reason: {Reason}", deliveryReport.Message.Value);
+            logger.LogWarning("Message delivery failed with reason: {Reason}", deliveryReport.Error.Reason);
             return;
         }
         
-        Console.Error.WriteLine("Message delivery failed with reason: {0}", deliveryReport.Message.Value);
+        Console.Error.WriteLine("Message delivery failed with reason: {0}", deliveryReport.Error.Reason);
     }
 }
