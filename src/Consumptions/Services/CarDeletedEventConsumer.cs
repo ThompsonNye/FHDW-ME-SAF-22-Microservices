@@ -1,5 +1,9 @@
-﻿using Confluent.Kafka;
+﻿using System.Text.Json;
+using Confluent.Kafka;
+using Microsoft.EntityFrameworkCore;
 using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Abstractions;
+using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Entities;
+using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Events;
 
 namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Services;
 
@@ -33,11 +37,13 @@ public class CarDeletedEventConsumer : BackgroundService
             return Task.CompletedTask;
         }
 
+#pragma warning disable CS4014
         new Thread(() => StartConsumerLoop(stoppingToken)).Start();
+#pragma warning restore CS4014
         return Task.CompletedTask;
     }
 
-    private void StartConsumerLoop(CancellationToken cancellationToken)
+    private async Task StartConsumerLoop(CancellationToken cancellationToken)
     {
         _consumer.Subscribe(_topic);
         
@@ -47,8 +53,34 @@ public class CarDeletedEventConsumer : BackgroundService
             {
                 var consumeResult = _consumer.Consume(cancellationToken);
 
-                // Handle message...
-                _logger.LogInformation("Message received: {Value}", consumeResult.Message.Value);
+                _logger.LogDebug("Message received: {Value}", consumeResult.Message.Value);
+                try
+                {
+                    var deletedCar = JsonSerializer.Deserialize<CarDeletedEvent>(consumeResult.Message.Value)!;
+                    var carId = new CarId(deletedCar.Id);
+                    var consumptionsForDeletedCar = await _dbContext.Consumptions
+                        .Where(x => x.CarId == carId)
+                        .ToListAsync(cancellationToken);
+
+                    if (!consumptionsForDeletedCar.Any())
+                    {
+                        _logger.LogDebug("No consumptions found for car with id {CarId}", carId);
+                        continue;
+                    }
+                    
+                    _dbContext.Consumptions.RemoveRange(consumptionsForDeletedCar);
+                    await _dbContext.SaveChangesAsync(cancellationToken);
+                    
+                    _logger.LogInformation("Deleted consumptions for car with id {CarId}", carId);
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (Exception e)
+                {
+                    _logger.LogWarning(e, "Could not process deleted car event with value: {Value}", consumeResult.Message.Value);
+                }
             }
             catch (OperationCanceledException)
             {
