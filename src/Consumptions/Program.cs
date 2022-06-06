@@ -7,6 +7,7 @@ using Nuyken.Vegasco.Backend.Microservices.Consumptions.Extensions;
 using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Abstractions;
 using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Configuration;
 using Nuyken.Vegasco.Backend.Microservices.Consumptions.Services;
+using Nuyken.Vegasco.Backend.Microservices.Shared.Kafka.Extensions;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Discovery.Eureka;
 

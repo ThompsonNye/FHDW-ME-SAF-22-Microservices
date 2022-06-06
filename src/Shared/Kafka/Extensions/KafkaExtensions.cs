@@ -1,7 +1,7 @@
 ﻿using Confluent.Kafka;
-using Nuyken.Vegasco.Backend.Microservices.Shared.Kafka;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Extensions;
+namespace Nuyken.Vegasco.Backend.Microservices.Shared.Kafka.Extensions;
 
 public static class KafkaExtensions
 {
