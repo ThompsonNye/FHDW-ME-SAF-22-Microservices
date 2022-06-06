@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Nuyken.Vegasco.Backend.Microservices.Cars.Extensions;
 using Nuyken.Vegasco.Backend.Microservices.Cars.Models.Abstractions;
+using Nuyken.Vegasco.Backend.Microservices.Shared.Kafka.Extensions;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Discovery.Eureka;
 
@@ -29,6 +30,8 @@ builder.Services.AddControllers()
     .AddFluentValidation(config => config.LocalizationEnabled = false);
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+builder.Services.AddKafka();
 
 var app = builder.Build();
 

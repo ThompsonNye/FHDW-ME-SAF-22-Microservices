@@ -1,12 +1,15 @@
 using System.Net;
+using System.Text.Json;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Cars.Models.Entities;
+using Confluent.Kafka;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Nuyken.Vegasco.Backend.Microservices.Cars.Models.Abstractions;
 using Nuyken.Vegasco.Backend.Microservices.Cars.Models.Dtos;
 using Nuyken.Vegasco.Backend.Microservices.Cars.Models.Requests;
+using Nuyken.Vegasco.Backend.Microservices.Shared.Kafka;
 
 namespace Nuyken.Vegasco.Backend.Microservices.Cars.Controllers
 {
@@ -89,6 +92,7 @@ namespace Nuyken.Vegasco.Backend.Microservices.Cars.Controllers
         [ProducesResponseType((int) HttpStatusCode.NoContent)]
         public async Task<IActionResult> UpdateAsync(Guid id,
             [FromBody] UpdateCarCommand updateCarCommand,
+            [FromServices] KafkaDependentProducer<Null, string> producer,
             [FromServices] IConfiguration config,
             CancellationToken cancellationToken)
         {
@@ -104,6 +108,9 @@ namespace Nuyken.Vegasco.Backend.Microservices.Cars.Controllers
             
             await _dbContext.SaveChangesAsync(cancellationToken);
 
+            var topic = config.GetValue<string>("Kafka:UpdateCarsTopic");
+            ProduceMessage(producer, topic, car);
+
             return NoContent();
         }
 
@@ -111,11 +118,17 @@ namespace Nuyken.Vegasco.Backend.Microservices.Cars.Controllers
         /// Deletes an existing car entry.
         /// </summary>
         /// <param name="id">The entry's id.</param>
+        /// <param name="producer"></param>
+        /// <param name="config"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpDelete("{id:guid}")]
         [ProducesResponseType((int) HttpStatusCode.NoContent)]
-        public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteAsync(
+            Guid id,
+            [FromServices] KafkaDependentProducer<Null, string> producer,
+            [FromServices] IConfiguration config,
+            CancellationToken cancellationToken)
         {
             var carId = new CarId(id);
             var car =
@@ -127,7 +140,25 @@ namespace Nuyken.Vegasco.Backend.Microservices.Cars.Controllers
 
             _dbContext.Cars.Remove(car);
             await _dbContext.SaveChangesAsync(cancellationToken);
+            
+            var topic = config.GetValue<string>("Kafka:DeleteCarsTopic");
+            ProduceMessage(producer, topic, car);
+            
             return NoContent();
+        }
+        
+        private void ProduceMessage(KafkaDependentProducer<Null, string> producer, string topic, object @object)
+        {
+            var message = GetMessage(@object);
+            producer.Produce(topic, new()
+            {
+                Value = message
+            }, report => DeliveryReportHandler.Handle(report, _logger));
+        }
+
+        private static string GetMessage(object @object)
+        {
+            return @object as string ?? JsonSerializer.Serialize(@object);
         }
     }
 }
