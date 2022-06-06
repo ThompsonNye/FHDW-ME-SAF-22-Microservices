@@ -42,6 +42,8 @@ services:
       Kafka__UpdateCarsTopic: "cars-update"
       Kafka__DeleteCarsTopic: "cars-delete"
       Kafka__ProducerSettings__BootstrapServers: "broker:29092"
+      Kafka__ConsumerSettings__BootstrapServers: "broker:29092"
+      Kafka__ConsumerSettings__GroupId: "cars-group"
     ports:
       - "80"
     depends_on:
