@@ -1,4 +1,4 @@
-﻿namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Kafka;
+﻿namespace Nuyken.Vegasco.Backend.Microservices.Shared.Kafka;
 
 public class KafkaSettings
 {

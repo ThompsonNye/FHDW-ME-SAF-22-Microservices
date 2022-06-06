@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker-compose.yaml = docker-compose.yaml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "src\Shared\Shared.csproj", "{861651B7-FC66-42DE-B476-37990671A94C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,10 +33,15 @@ Global
 		{C35817A6-6430-4F13-B744-59606E47D1DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C35817A6-6430-4F13-B744-59606E47D1DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C35817A6-6430-4F13-B744-59606E47D1DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{861651B7-FC66-42DE-B476-37990671A94C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{861651B7-FC66-42DE-B476-37990671A94C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{861651B7-FC66-42DE-B476-37990671A94C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{861651B7-FC66-42DE-B476-37990671A94C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{51D75D26-BC7B-4B04-ACE8-096942A83AB9} = {7F54C6EF-2615-4EC7-9849-74327D2F7B1A}
 		{4B7636B7-C99C-4C5B-A20C-F4B1E7ED5C9F} = {7F54C6EF-2615-4EC7-9849-74327D2F7B1A}
 		{C35817A6-6430-4F13-B744-59606E47D1DB} = {7F54C6EF-2615-4EC7-9849-74327D2F7B1A}
+		{861651B7-FC66-42DE-B476-37990671A94C} = {7F54C6EF-2615-4EC7-9849-74327D2F7B1A}
 	EndGlobalSection
 EndGlobal

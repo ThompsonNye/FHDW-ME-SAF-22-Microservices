@@ -1,5 +1,5 @@
 ﻿using Confluent.Kafka;
-using Nuyken.Vegasco.Backend.Microservices.Consumptions.Kafka;
+using Nuyken.Vegasco.Backend.Microservices.Shared.Kafka;
 
 namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Extensions;
 

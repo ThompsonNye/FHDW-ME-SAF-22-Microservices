@@ -1,7 +1,7 @@
-﻿using System.Text.Json;
-using Confluent.Kafka;
+﻿using Confluent.Kafka;
+using Microsoft.Extensions.Configuration;
 
-namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Kafka;
+namespace Nuyken.Vegasco.Backend.Microservices.Shared.Kafka;
 
 public class KafkaClientHandle : IDisposable
 {

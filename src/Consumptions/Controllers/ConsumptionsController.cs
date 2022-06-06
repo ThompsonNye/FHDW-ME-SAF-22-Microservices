@@ -5,11 +5,11 @@ using AutoMapper.QueryableExtensions;
 using Confluent.Kafka;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Nuyken.Vegasco.Backend.Microservices.Consumptions.Kafka;
 using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Abstractions;
 using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Dtos;
 using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Entities;
 using Nuyken.Vegasco.Backend.Microservices.Consumptions.Models.Requests;
+using Nuyken.Vegasco.Backend.Microservices.Shared.Kafka;
 
 namespace Nuyken.Vegasco.Backend.Microservices.Consumptions.Controllers
 {
