@@ -51,7 +51,7 @@ services:
       - consumptionsDb
       - broker
     deploy:
-      replicas: 1
+      replicas: 4
       labels:
         app: consumptions
         
@@ -83,7 +83,7 @@ services:
       - carsDb
       - broker
     deploy:
-      replicas: 1
+      replicas: 4
       labels:
         app: cars
   
@@ -106,12 +106,6 @@ services:
       - "5432"
     ports:
       - "55432:5432"
-  
-  #  cars:
-  #    build:
-  #        context: src/Cars
-  #        dockerfile: Dockerfile
-  #    container_name: cars
 
   zookeeper:
     image: confluentinc/cp-zookeeper
