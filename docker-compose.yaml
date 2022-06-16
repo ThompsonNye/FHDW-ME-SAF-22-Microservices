@@ -2,18 +2,12 @@ version: '3.4'
 
 services:
   serviceDiscovery:
-    image: steeltoeoss/eureka-server
-    container_name: serviceDiscovery
-    restart: always
+    image: docker.nuyken.dev/fhdw-me-saf-22-microservices/eureka-server:2.0.1
     ports:
       - "8761:8761"
   
   gateway:
-    build:
-      context: src/Gateway
-      dockerfile: Dockerfile
-    container_name: gateway
-    restart: always
+    image: docker.nuyken.dev/fhdw-me-saf-22-microservices/gateway:1.0.0
     ports:
       - "80:80"
     depends_on:
@@ -22,10 +16,7 @@ services:
       - ./src/Gateway/ocelot.json:/app/ocelot.json
 
   consumptions:
-    build:
-      context: src/
-      dockerfile: Consumptions/Dockerfile
-    restart: always
+    image: docker.nuyken.dev/fhdw-me-saf-22-microservices/consumptions:1.0.0
     environment:
       ConnectionStrings__Default: "Host=consumptionsDb;Port=5432;Database=postgres;Username=postgres;Password=password"
       Database__Type: "postgres"
@@ -52,10 +43,7 @@ services:
       - broker
         
   cars:
-    build:
-      context: src/
-      dockerfile: Cars/Dockerfile
-    restart: always
+    image: docker.nuyken.dev/fhdw-me-saf-22-microservices/cars:1.0.0
     environment:
       ConnectionStrings__Default: "Host=carsDb;Port=5432;Database=postgres;Username=postgres;Password=password"
       Database__Type: "postgres"
@@ -80,8 +68,7 @@ services:
       - broker
   
   consumptionsDb:
-    image: postgres
-    restart: always
+    image: postgres:14.3
     environment:
       POSTGRES_PASSWORD: "password"
     expose:
@@ -90,8 +77,7 @@ services:
       - "5432:5432"
   
   carsDb:
-    image: postgres
-    restart: always
+    image: postgres:14.3
     environment:
       POSTGRES_PASSWORD: "password"
     expose:
@@ -100,15 +86,13 @@ services:
       - "55432:5432"
 
   zookeeper:
-    image: confluentinc/cp-zookeeper
-    container_name: zookeeper
+    image: docker.nuyken.dev/fhdw-me-saf-22-microservices/zookeeper:7.1.1
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
   broker:
-    image: confluentinc/cp-kafka
-    container_name: broker
+    image: docker.nuyken.dev/fhdw-me-saf-22-microservices/kafka:7.1.1
     ports:
       - "9092:9092"
     depends_on:
