@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  consumptions:
+    deploy:
+      replicas: 2
+      
+  cars:
+    deploy:
+      replicas: 2

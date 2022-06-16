@@ -7,10 +7,6 @@ services:
     restart: always
     ports:
       - "8761:8761"
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == mgmt1
   
   gateway:
     build:
@@ -24,12 +20,6 @@ services:
       - serviceDiscovery
     volumes:
       - ./src/Gateway/ocelot.json:/app/ocelot.json
-    deploy:
-      labels:
-        app: gateway
-      placement:
-        constraints:
-          - node.hostname == mgmt2
 
   consumptions:
     build:
@@ -60,14 +50,6 @@ services:
       - serviceDiscovery
       - consumptionsDb
       - broker
-    deploy:
-      replicas: 4
-      labels:
-        app: consumptions
-      placement:
-        constraints:
-          - node.hostname != mgmt1
-          - node.hostname != mgmt2
         
   cars:
     build:
@@ -96,14 +78,6 @@ services:
       - serviceDiscovery
       - carsDb
       - broker
-    deploy:
-      replicas: 4
-      labels:
-        app: cars
-      placement:
-        constraints:
-          - node.hostname != mgmt1
-          - node.hostname != mgmt2
   
   consumptionsDb:
     image: postgres
@@ -114,10 +88,6 @@ services:
       - "5432"
     ports:
       - "5432:5432"
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == mgmt1
   
   carsDb:
     image: postgres
@@ -128,10 +98,6 @@ services:
       - "5432"
     ports:
       - "55432:5432"
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == mgmt1
 
   zookeeper:
     image: confluentinc/cp-zookeeper
@@ -139,10 +105,6 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == mgmt1
 
   broker:
     image: confluentinc/cp-kafka
@@ -159,7 +121,3 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == mgmt1

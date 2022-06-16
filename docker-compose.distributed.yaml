@@ -1,0 +1,52 @@
+version: '3.4'
+
+services:
+  serviceDiscovery:
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == shdesol-fhdwsaf01
+  
+  gateway:
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == shdesol-fhdwsaf02
+
+  consumptions:
+    deploy:
+      placement:
+        constraints:
+          - node.hostname != shdesol-fhdwsaf01
+          - node.hostname != shdesol-fhdwsaf02
+        
+  cars:
+    deploy:
+      placement:
+        constraints:
+          - node.hostname != shdesol-fhdwsaf01
+          - node.hostname != shdesol-fhdwsaf02
+  
+  consumptionsDb:
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == shdesol-fhdwsaf01
+  
+  carsDb:
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == shdesol-fhdwsaf01
+
+  zookeeper:
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == shdesol-fhdwsaf01
+
+  broker:
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == shdesol-fhdwsaf01
